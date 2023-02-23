@@ -9,15 +9,16 @@
 #include <ESPAsyncWebServer.h>
 
 // Replace with your network credentials
-const char* ssid = "ATT-WIFI-7aW6";
-const char* password = "12345678";
+const char* ssid = "Kanata";
+const char* password = "1234567890";
+const char* http_username = "admin";
+const char* http_password = "admin";
 
 
-
-String sliderValue = "1024";
+String sliderValue = "10";
 // setting PWM properties
 
-const char* PARAM_INPUT_1 = "value1";
+const char* PARAM = "value1";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -27,21 +28,28 @@ const char index_html[] PROGMEM = R"rawliteral(
 <html>
    <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Robot car</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <title>Shuttlecock Collector</title>
       <style>
          html {font-family: Arial; display: inline-block; text-align: center; }
          h2 {font-size: 2.3rem;}
-         p {font-size: 1.0rem;}
+         p {font-size: 1rem;
+         margin-bottom: 0.5rem;
+         }
          body {max-width: 400px; margin:auto; padding-bottom: 25px;}
-         .slider { -webkit-appearance: none; margin-left: 68px ; width: 266px; height: 25px; background: #01105C;
+         .slider { -webkit-appearance: none; 
+         margin-left: 80px ; width: 235px; height: 25px; background: #01105C;background-image: linear-gradient(to right, lightblue,lightgreen,orange, red);
          outline: none; -webkit-transition: .2s; transition: opacity .2s;border-radius:2px;}
-         .slider::-webkit-slider-thumb {-webkit-appearance: none; appearance: none; width: 35px; height: 35px; background: #A03249; cursor: pointer;border-radius:5px;}
-         .slider::-moz-range-thumb { width: 35px; height: 35px; background: #A03249; cursor: pointer; } 
+         .slider::-webkit-slider-thumb {-webkit-appearance: none; appearance: none; 
+         width: 35px; height: 35px;
+         background-color:blue;
+         cursor: pointer;border-radius:5px;}
+         .slider::-moz-range-thumb { width: 35px; height: 35px; background: #103249; cursor: pointer; } 
          .grid {
          display: table;
          border-spacing: 5px;
          //text-align:center;
-         margin-left: 104px;
+         margin-left: 76px;
          }
          .row {
          display: table-row
@@ -52,19 +60,22 @@ const char index_html[] PROGMEM = R"rawliteral(
          display: table-cell;
          line-height:80px;
          }
-         // batteryContainer {
-         //   display: flex;
-         //   flex-direction: row;
-         //   align-items: center;
-         // }
+         .batteryContainer {
+         display: flex;
+         flex-direction: row;
+         align-items: center;
+         height:60px;
+         width:70%;
+         }
          .batterybody {
          border-radius: 3px;
-         border: 1px solid #444;
+         border: 2px solid #444;
          padding: 1px ;
          width:150px;
          height: 50px;
          position:relative;
-         margin:auto;
+         /*margin-left:auto;*/
+         left:118px;
          }
          .batteryHead {
          border-radius: 0px 2px 2px 0px;
@@ -72,9 +83,9 @@ const char index_html[] PROGMEM = R"rawliteral(
          margin: 0px;
          width: 10px;
          height: 26px;
-         position:absolute;
-         left:275px;
-         top:193px;
+         position:relative;
+         left:118px;
+         /*top:0px;*/
          }
          .batteryLevel {
          border-radius: 1px;
@@ -87,98 +98,83 @@ const char index_html[] PROGMEM = R"rawliteral(
          text-align:center;
          }
          .sliderstart {
-         position: absolute;
-         left:39px;
-         top:95px;
+         position: relative;
+         left:81px;
+         top:-6px;
          font-weight: bold;
          }
          .sliderend {
-         position: absolute;
-         left:335px;
-         top:95px;
+         position: relative;
+         left:-2px;
+         top:-6px;
          font-weight: bold;  
          }
-
-
-.switch input
-{
-  display: none;
-} 
-
-.switch 
-{
-  display: inline-block;
-  width: 120px; /*=w*/
-  height: 50px; /*=h*/
-  margin-left: 137px;
-  
-  position: relative;
-}
-
-.slider1
-{
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-radius: 30px;
-  box-shadow: 0 0 0 2px #777, 0 0 4px #777;
-  cursor: pointer;
-  border: 4px solid transparent;
-  // overflow: hidden;
-  transition: 0.2s;
-}
-
-.slider1:before
-{
-  position: absolute;
-  
-  content: "";
-  width: 40%;
-  height: 42px;
-  background-color: #777;
-  border-radius: 30px;
-  transform: translateX(0px); 
-  transition: 0.2s;
-}
-input:not(:checked) + .slider1:before{
-    background-color: gray;
-}
-
-input:not(:checked) + .slider1
-{
-    // box-shadow: 0 0 0 2px red, 0 0 8px red;
-}
-
-input:checked + .slider1:before
-{
-  transform: translateX(67px); 
-  background-color: limeGreen;
-}
-
-input:checked + .slider1
-{
-  box-shadow: 0 0 0 2px limeGreen, 0 0 8px limeGreen;
-}
-
-
-
+         .switch input
+         {
+         display: none;
+         } 
+         .switch 
+         {
+         display: inline-block;
+         width: 120px; /*=w*/
+         height: 50px; /*=h*/
+         margin-left: 137px;
+         position: relative;
+         }
+         .slider1
+         {
+         position: absolute;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         border-radius: 30px;
+         box-shadow: 0 0 0 2px #777, 0 0 4px #777;
+         cursor: pointer;
+         border: 4px solid transparent;
+         // overflow: hidden;
+         transition: 0.2s;
+         }
+         .slider1:before
+         {
+         position: absolute;
+         content: "";
+         width: 40%;
+         height: 42px;
+         background-color: #777;
+         border-radius: 30px;
+         transform: translateX(0px); 
+         transition: 0.2s;
+         }
+         input:not(:checked) + .slider1:before{
+         background-color: gray;
+         }
+         input:not(:checked) + .slider1
+         {
+         // box-shadow: 0 0 0 2px red, 0 0 8px red;
+         }
+         input:checked + .slider1:before
+         {
+         transform: translateX(67px); 
+         background-color: limeGreen;
+         }
+         input:checked + .slider1
+         {
+         box-shadow: 0 0 0 2px limeGreen, 0 0 8px limeGreen;
+         }
+         .logoutButton
+         {
+         margin-left:-20px;
+         background-color: lightblue;
+         }
       </style>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
    </head>
    <body>
-      <h2 style="text-align:center">Robotic Car Dashboard</h2>
-      <div class ="sliderstart">300</div>
-      <div class ="sliderend">1024</div>
-      <p>
-      <div style="text-align:center" ><b>Speed:<span id="textSliderValue">%SLIDERVALUE%</span></b></div>
-      </p>
-      <p><input type="range" onchange="updateSlider(this)" id="speedSlider" min="300" max="1024" value="%SLIDERVALUE%" step="1" class="slider"> </p>
-      <p style="text-align:center"><b>Battery Level Indicator</b>
+      <h4 style="text-align:center" >Shuttlecock Collector</h4>
+      <p style="text-align:center"><b>Battery Level</b>
       <div>
          <div class="batteryContainer">
             <div class="batterybody">
@@ -192,15 +188,22 @@ input:checked + .slider1
          </div>
       </div>
       </p>
-      <p style="text-align:center"> <b>Pickup Motor Switch</b></p>
+      <p style="text-align:center"> <b>Pickup Motor Relay</b></p>
       <label class="switch">
       <span style="font-weight:bold; color:limeGreen; margin: 11px 0 0 15px; position:absolute;">                                                                        
-        ON</span><span style="font-weight:bold; color:gray; margin: 11px 0 0 76px; position:absolute;"> OFF
+      ON</span><span style="font-weight:bold; color:gray; margin: 11px 0 0 76px; position:absolute;"> OFF
       </span>
-        <input type="checkbox" onclick="relay(this)" id="checkbox">
-        <span class="slider1"></span>
+      <input type="checkbox" onclick="relay(this)" id="checkbox">
+      <span class="slider1"></span>
       </label>
-      <p style="text-align:center"><b>Drive Panel</b></p>
+      <p>
+      <p style="text-align:center" ><b>Drive Motor Speed:<span id="textSliderValue">%SLIDERVALUE%</span></b></p>
+      <p style="margin-bottom:0px;">
+         <span class ="sliderstart">1</span>
+         <input type="range" name="RangeInput" onchange="updateSlider(this)" id="speedSlider" min="1" max="10" value="%SLIDERVALUE%" step="1" class="slider"> 
+         <span class ="sliderend">10</span>
+      </p>
+      <p style="text-align:center"><b>Drive Motor Direction</b></p>
       <div class="grid" >
       <div class="row">
          <div class="cell"></div>
@@ -222,7 +225,7 @@ input:checked + .slider1
             </button>
          </div>
          <div class="cell">
-            <button type="button" class="btn btn-light btn-block " id = "brake" onclick="motorControl(this)" style="width: 50px; height: 50px; color:red">
+            <button type="button" class="btn btn-light btn-block " id = "brake" onclick="motorControl(this)" style="width: 50px; height: 50px; color:red; background-color: #070707;">
                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-sign-stop " viewBox="0 0 16 16" >
                   <path d="M3.16 10.08c-.931 0-1.447-.493-1.494-1.132h.653c.065.346.396.583.891.583.524 0 .83-.246.83-.62 0-.303-.203-.467-.637-.572l-.656-.164c-.61-.147-.978-.51-.978-1.078 0-.706.597-1.184 1.444-1.184.853 0 1.386.475 1.436 1.087h-.645c-.064-.32-.352-.542-.797-.542-.472 0-.77.246-.77.6 0 .261.196.437.553.522l.654.161c.673.164 1.06.487 1.06 1.11 0 .736-.574 1.228-1.544 1.228Zm3.427-3.51V10h-.665V6.57H4.753V6h3.006v.568H6.587Z"></path>
                   <path fill-rule="evenodd" d="M11.045 7.73v.544c0 1.131-.636 1.805-1.661 1.805-1.026 0-1.664-.674-1.664-1.805V7.73c0-1.136.638-1.807 1.664-1.807 1.025 0 1.66.674 1.66 1.807Zm-.674.547v-.553c0-.827-.422-1.234-.987-1.234-.572 0-.99.407-.99 1.234v.553c0 .83.418 1.237.99 1.237.565 0 .987-.408.987-1.237Zm1.15-2.276h1.535c.82 0 1.316.55 1.316 1.292 0 .747-.501 1.289-1.321 1.289h-.865V10h-.665V6.001Zm1.436 2.036c.463 0 .735-.272.735-.744s-.272-.741-.735-.741h-.774v1.485h.774Z"></path>
@@ -249,10 +252,16 @@ input:checked + .slider1
          </div>
          <div class="cell"></div>
       </div>
-
-
+      <button class ="logoutButton" onclick="logoutButton()" >Logout</button>
    </body>
    <script>
+   "use strict";
+      function logoutButton() {
+         var xhr = new XMLHttpRequest();
+         xhr.open("GET", "/logout", true);
+         xhr.send();
+         // setTimeout(function(){ window.open("/logged-out","_self"); }, 1000);
+      }
       $(document).ready(function(){
          var level=$.trim($(".batteryLevel").text());
          $(".batteryLevel").css("width", level);
@@ -263,6 +272,8 @@ input:checked + .slider1
            document.getElementById("textSliderValue").innerHTML = sliderValue;
            xmlHttp.open("GET", "/slider?value1="+sliderValue, true)
            xmlHttp.send();
+          //  const Slider = document.querySelector('input[name=RangeInput]')
+          //  Slider.oninput =_=> Slider.style.setProperty('--SliderColor', `hsl(${Slider.value}, 100%, 50%)`)
            }
           function motorControl(element) {
            var xmlHttp = new XMLHttpRequest();
@@ -293,12 +304,24 @@ input:checked + .slider1
            xmlHttp.open("GET", "/relay?value1="+checkvalue, true);
            xmlHttp.send();
           }
+      
            
          
          
          
    </script>
-</html>
+   )rawliteral";
+   const char logout_html[] PROGMEM = R"rawliteral(
+   <!DOCTYPE HTML>
+   <html>
+      <head>
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+      </head>
+      <body>
+         <p>Logged out or <a href="/">return to homepage</a>.</p>
+         <p><strong>Note:</strong> close all web browser tabs to complete the logout process.</p>
+      </body>
+   </html>
 )rawliteral";
 
 String readBatteryLevel(){
@@ -328,8 +351,8 @@ void setup() {
   Serial.begin(115200);
   pinMode(D0, OUTPUT);
   digitalWrite(D0,LOW);
-  pinMode(D1, OUTPUT);
   pinMode(D2, OUTPUT);
+  pinMode(D3, OUTPUT);
   pinMode(D4, OUTPUT);
   pinMode(D5, OUTPUT);
 
@@ -351,26 +374,39 @@ void setup() {
 
   // Route for root / web page
   server.on("/", HTTP_GET, [](AsyncWebServerRequest* request) {
+    if(!request->authenticate(http_username, http_password))
+      return request->requestAuthentication();
     request->send_P(200, "text/html", index_html, processor);
   });
-
+  server.on("/logout", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(401); 
+  });
+//   server.on("/logged-out", HTTP_GET, [](AsyncWebServerRequest *request){
+//     request->send_P(200, "text/html", logout_html, processor);
+//   });
+ 
   // Send a GET request to <ESP_IP>/slider?value=<inputMessage>
   server.on("/slider", HTTP_GET, [](AsyncWebServerRequest* request) {
+   if(!request->authenticate(http_username, http_password)) return request->requestAuthentication();
     String inputMessage1;
-    if (request->hasParam(PARAM_INPUT_1)) {
-      inputMessage1 = request->getParam(PARAM_INPUT_1)->value();
+    if (request->hasParam(PARAM)) {
+      inputMessage1 = request->getParam(PARAM)->value();
       sliderValue = inputMessage1;
-      analogWrite(D3, sliderValue.toInt());
-      analogWrite(D6, sliderValue.toInt());
+      int pwmValue = 300+(sliderValue.toInt()-1)*724/9;
+      Serial.print("pwmValue=");
+      Serial.println(pwmValue);
+      analogWrite(D1, pwmValue);
+      analogWrite(D6, pwmValue);
       request->send(200, "text/plain", "OK");
     }else {
       request->send(200, "text/plain", "No Message Sent");
     }
   });
   server.on("/relay", HTTP_GET, [](AsyncWebServerRequest* request) {
+    if(!request->authenticate(http_username, http_password)) return request->requestAuthentication();
     String inputMessage1;
-    if (request->hasParam(PARAM_INPUT_1)) {
-      inputMessage1 = request->getParam(PARAM_INPUT_1)->value();
+    if (request->hasParam(PARAM)) {
+      inputMessage1 = request->getParam(PARAM)->value();
       if (inputMessage1=="checked") {
         digitalWrite(D0,HIGH);
       } 
@@ -383,42 +419,54 @@ void setup() {
     }
   });
   server.on("/control", HTTP_GET, [](AsyncWebServerRequest* request) {
+    if(!request->authenticate(http_username, http_password)) return request->requestAuthentication();
     String inputMessage1;
-    if (request->hasParam(PARAM_INPUT_1)) {
-      inputMessage1 = request->getParam(PARAM_INPUT_1)->value();
+    if (request->hasParam(PARAM)) {
+      inputMessage1 = request->getParam(PARAM)->value();
       Serial.println(inputMessage1);
+      //Channel B: ENB=D1(PWM), IN3=D3, IN4=D2, 
+      //Channel A: ENA=D6(PWM), IN1=D5, IN2=D4  
+
+      //  Left motor           right motor
+      //  (OUT3,OUT4)          (OUT1,OUT2)
+      //  (D4,D5)              (D1,D2)      ---control
+      // (D5,D4)                (D3,D2)
+      //  (1,0)                (1,0)        -- up(forward)
+      //  (0,1)                (0,1)        -- down(backward)
+      //  (0,1)  (down)        (1,0) (up)   -- left
+      //  (1,0)  (up)          (0,1) (down) -- right
       if (inputMessage1 =="brake"){
         // analogWrite(D3, 0);
         // analogWrite(D6, 0);
-        digitalWrite(D4, LOW);  //right motor off
-        digitalWrite(D5, LOW);
-        digitalWrite(D1, LOW);  //left motor off
+        digitalWrite(D5, LOW);  //left motor off
+        digitalWrite(D4, LOW);
+        digitalWrite(D3, LOW);  //right motor off
         digitalWrite(D2, LOW);
       }else if (inputMessage1 == "left") {
-        digitalWrite(D4, LOW);  //left motor off
-        digitalWrite(D5, HIGH);
-        digitalWrite(D1, HIGH);  //right motor forward
-        digitalWrite(D2, LOW);
+        digitalWrite(D5, HIGH);  //left motor forward
+        digitalWrite(D4, LOW);
+        digitalWrite(D3, LOW);  //right motor reverse
+        digitalWrite(D2, HIGH);
         // Serial.println("left:D1=0,D2=0; D4=1,D5=0");
        }else if (inputMessage1 == "right") {
       
-        digitalWrite(D1, LOW);  //right motor off
-        digitalWrite(D2, HIGH);
-        digitalWrite(D4, HIGH);  //left motor forward
-        digitalWrite(D5, LOW);
+        digitalWrite(D5, LOW);  //left motor reverse
+        digitalWrite(D4, HIGH);
+        digitalWrite(D3, HIGH);  //right motor forward
+        digitalWrite(D2, LOW);
         //Serial.println("right:D1=1,D2=0; D4=0,D5=0");
        } else if (inputMessage1 == "up") {
        
-        digitalWrite(D4, HIGH);  //right motor forward
-        digitalWrite(D5, LOW);
-        digitalWrite(D1, HIGH);  //left motor forward
+        digitalWrite(D5, HIGH);  //left motor forward
+        digitalWrite(D4, LOW);
+        digitalWrite(D3, HIGH);  //right motor forward
         digitalWrite(D2, LOW);
         // Serial.println("up:D1=1,D2=0; D4=1,D5=0");
        } else if (inputMessage1 == "down") {
        
-        digitalWrite(D4, LOW);  //right motor backward
-        digitalWrite(D5, HIGH);
-        digitalWrite(D1, LOW);  //left motor backward
+        digitalWrite(D5, LOW);  //left motor backward
+        digitalWrite(D4, HIGH);
+        digitalWrite(D3, LOW);  //right motor backward
         digitalWrite(D2, HIGH);
         // Serial.println("down:D1=0,D2=1; D4=0,D5=1");
        }
