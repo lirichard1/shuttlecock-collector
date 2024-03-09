@@ -9,10 +9,10 @@
 #include <ESPAsyncWebServer.h>
 
 // Replace with your network credentials
-const char* ssid = "Kanata";
-const char* password = "1234567890";
-const char* http_username = "admin";
-const char* http_password = "admin";
+const char* ssid = "YOUR_NETWORK_SSID";
+const char* password = "YOUR_NETWORK_PASSWORD";
+const char* http_username = "YOUR_USERNAME";
+const char* http_password = "YOUR_PASSWORD";
 
 
 String sliderValue = "10";
@@ -349,12 +349,12 @@ void notFound(AsyncWebServerRequest *request) {
 void setup() {
   // Serial port for debugging purposes
   Serial.begin(115200);
-  pinMode(D0, OUTPUT);
-  digitalWrite(D0,LOW);
-  pinMode(D2, OUTPUT);
-  pinMode(D3, OUTPUT);
-  pinMode(D4, OUTPUT);
-  pinMode(D5, OUTPUT);
+  pinMode(D0, OUTPUT); //change pin inputs to match whatever you have
+  digitalWrite(D0,LOW); //change pin inputs to match whatever you have
+  pinMode(D2, OUTPUT); //change pin inputs to match whatever you have
+  pinMode(D3, OUTPUT); //change pin inputs to match whatever you have
+  pinMode(D4, OUTPUT); //change pin inputs to match whatever you have
+  pinMode(D5, OUTPUT); //change pin inputs to match whatever you have
 
   // configure motor PWM 
   analogWriteRange(1024);
@@ -395,8 +395,8 @@ void setup() {
       int pwmValue = 300+(sliderValue.toInt()-1)*724/9;
       Serial.print("pwmValue=");
       Serial.println(pwmValue);
-      analogWrite(D1, pwmValue);
-      analogWrite(D6, pwmValue);
+      analogWrite(D1, pwmValue); //change pin inputs to match whatever you have
+      analogWrite(D6, pwmValue); //change pin inputs to match whatever you have
       request->send(200, "text/plain", "OK");
     }else {
       request->send(200, "text/plain", "No Message Sent");
@@ -408,10 +408,10 @@ void setup() {
     if (request->hasParam(PARAM)) {
       inputMessage1 = request->getParam(PARAM)->value();
       if (inputMessage1=="checked") {
-        digitalWrite(D0,HIGH);
+        digitalWrite(D0,HIGH); //change pin inputs to match whatever you have
       } 
       if (inputMessage1=="unchecked") {
-        digitalWrite(D0,LOW);
+        digitalWrite(D0,LOW); //change pin inputs to match whatever you have
       } 
       request->send(200, "text/plain", "OK");
     } else {
@@ -435,34 +435,34 @@ void setup() {
       //  (0,1)                (0,1)        -- down(backward)
       //  (0,1)  (down)        (1,0) (up)   -- left
       //  (1,0)  (up)          (0,1) (down) -- right
-      if (inputMessage1 =="brake"){
+      if (inputMessage1 =="brake"){ //change pin inputs to match whatever you have
         // analogWrite(D3, 0);
         // analogWrite(D6, 0);
         digitalWrite(D5, LOW);  //left motor off
         digitalWrite(D4, LOW);
         digitalWrite(D3, LOW);  //right motor off
         digitalWrite(D2, LOW);
-      }else if (inputMessage1 == "left") {
+      }else if (inputMessage1 == "left") { //change pin inputs to match whatever you have
         digitalWrite(D5, HIGH);  //left motor forward
         digitalWrite(D4, LOW);
         digitalWrite(D3, LOW);  //right motor reverse
         digitalWrite(D2, HIGH);
         // Serial.println("left:D1=0,D2=0; D4=1,D5=0");
-       }else if (inputMessage1 == "right") {
+       }else if (inputMessage1 == "right") { //change pin inputs to match whatever you have
       
         digitalWrite(D5, LOW);  //left motor reverse
         digitalWrite(D4, HIGH);
         digitalWrite(D3, HIGH);  //right motor forward
         digitalWrite(D2, LOW);
         //Serial.println("right:D1=1,D2=0; D4=0,D5=0");
-       } else if (inputMessage1 == "up") {
+       } else if (inputMessage1 == "up") { //change pin inputs to match whatever you have
        
         digitalWrite(D5, HIGH);  //left motor forward
         digitalWrite(D4, LOW);
         digitalWrite(D3, HIGH);  //right motor forward
         digitalWrite(D2, LOW);
         // Serial.println("up:D1=1,D2=0; D4=1,D5=0");
-       } else if (inputMessage1 == "down") {
+       } else if (inputMessage1 == "down") { //change pin inputs to match whatever you have
        
         digitalWrite(D5, LOW);  //left motor backward
         digitalWrite(D4, HIGH);
